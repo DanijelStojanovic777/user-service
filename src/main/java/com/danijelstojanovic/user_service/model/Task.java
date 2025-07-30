@@ -1,6 +1,7 @@
 package com.danijelstojanovic.user_service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -23,6 +24,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "useri_id")
+    @JsonBackReference
     private User user;
 
 
