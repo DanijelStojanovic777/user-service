@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -19,6 +21,9 @@ public class User {
     @NotBlank(message = "Username is required")
     @Email(message = "Email should be valid")
     private String email;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
     // Getters and Setters
     public Long getId() {
@@ -43,6 +48,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     //Constructors
