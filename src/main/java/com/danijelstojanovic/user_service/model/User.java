@@ -1,11 +1,13 @@
 package com.danijelstojanovic.user_service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "username is required")
     private String username;
 
     @NotBlank(message = "Username is required")
@@ -26,6 +28,28 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Task> tasks;
+
+    //Constructors
+    public User() {
+
+    }
+
+    public User(Long id, String username, String email) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+    }
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "task_shares",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    @JsonIgnore
+    private List<Task> sharedTasks = new ArrayList<>();
+
 
     // Getters and Setters
     public Long getId() {
@@ -60,14 +84,11 @@ public class User {
         this.tasks = tasks;
     }
 
-    //Constructors
-    public User() {
-
+    public List<Task> getSharedTasks() {
+        return sharedTasks;
     }
 
-    public User(Long id, String username, String email) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
+    public void setSharedTasks(List<Task> sharedTasks) {
+        this.sharedTasks = sharedTasks;
     }
 }

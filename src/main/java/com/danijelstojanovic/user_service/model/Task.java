@@ -2,10 +2,13 @@ package com.danijelstojanovic.user_service.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -18,6 +21,7 @@ public class Task {
     @NotBlank(message = "Title is required")
     private String title;
 
+    @NotBlank(message = "Description is required")
     private String description;
 
     private LocalDate dueDate;
@@ -26,6 +30,11 @@ public class Task {
     @JoinColumn(name = "useri_id")
     @JsonBackReference
     private User user;
+
+
+    @ManyToMany(mappedBy = "sharedTasks")
+    @JsonIgnore
+    private List<User> sharedWithUsers = new ArrayList<>();
 
 
     public Task() {
@@ -80,4 +89,11 @@ public class Task {
         this.title = title;
     }
 
+    public List<User> getSharedWithUsers() {
+        return sharedWithUsers;
+    }
+
+    public void setSharedWithUsers(List<User> sharedWithUsers) {
+        this.sharedWithUsers = sharedWithUsers;
+    }
 }

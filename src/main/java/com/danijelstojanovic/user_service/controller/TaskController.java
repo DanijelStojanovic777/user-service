@@ -40,4 +40,19 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{taskId}/share/{userId}")
+    public ResponseEntity<?> shareTask(@PathVariable Long taskId, @PathVariable Long userId) {
+        taskService.shareTaskWithUser(taskId, userId);
+        return ResponseEntity.ok().body("Task shared!");
+    }
+
+    @GetMapping("/shared/{userId}")
+    public ResponseEntity<List<Task>> getSharedTasks(@PathVariable Long userId) {
+        try {
+            List<Task> sharedTasks = taskService.getTasksSharedWithUser(userId);
+            return ResponseEntity.ok(sharedTasks);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
